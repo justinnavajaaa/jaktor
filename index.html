@@ -1,329 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For My Baby 💖</title>
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-body{
-    height:100vh;
-    overflow:hidden;
-    font-family:'Comic Sans MS', cursive;
-
-    /* BACKGROUND IMAGE */
-    background: url("baby.jpeg") no-repeat center center;
-    background-size: cover;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    color:white;
-    position:relative;
-}
-
-/* Dark overlay */
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    z-index:0;
-    pointer-events:none;
-}
-
-h1{
-    margin-top:70px;
-    font-size:3em;
-    text-align:center;
-    text-shadow:0 0 20px #fff, 0 0 40px #ff66b2;
-    z-index:1;
-}
-
-.buttons{
-    margin-top:80px;
-    position:relative;
-    width:400px;
-    height:250px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:1;
-}
-
-#yesBtn{
-    padding:45px 100px;
-    font-size:40px;
-    border:none;
-    border-radius:80px;
-    cursor:pointer;
-    background:linear-gradient(45deg,#ff4da6,#ff99cc);
-    color:white;
-    box-shadow:0 0 40px #ff66b2, 0 0 100px #ff99cc;
-}
-
-#noBtn{
-    padding:6px 14px;
-    font-size:12px;
-    border:none;
-    border-radius:20px;
-    background:white;
-    color:#ff4da6;
-    position:absolute;
-    cursor:pointer;
-}
-
-/* Floating emoji + text */
-.pop{
-    position:fixed;
-    font-size:80px;
-    pointer-events:none;
-    animation:popAnim 0.4s ease;
-}
-
-.popText{
-    position:fixed;
-    font-size:30px;
-    pointer-events:none;
-    animation:popAnim 0.4s ease;
-    color:white;
-    text-shadow:0 0 10px #000;
-}
-
-@keyframes popAnim{
-    from{transform:scale(0);opacity:0;}
-    to{transform:scale(1);opacity:1;}
-}
-
-/* Bouquet / message Scene (shown AFTER flower) */
-#bouquetScene{
-    position:fixed;
-    inset:0;
-    background: radial-gradient(circle,#ff4da6,#b30059);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 1s ease;
-    text-align:center;
-    padding:20px;
-    z-index:10;
-}
-
-#bouquetScene.active{
-    opacity:1;
-    pointer-events:auto;
-}
-
-.bouquet{
-    font-size:120px;
-}
-
-textarea{
-    width:300px;
-    height:80px;
-    border-radius:15px;
-    border:none;
-    padding:10px;
-    resize:none;
-    margin-top:20px;
-    font-family:cursive;
-}
-
-.submit-btn{
-    margin-top:10px;
-    padding:10px 25px;
-    border:none;
-    border-radius:20px;
-    background:white;
-    color:#ff4da6;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.love-message{
-    margin-top:15px;
-    font-size:1.2em;
-}
-
-/* Hyperlink style */
-a{
-    color:white;
-    text-decoration:none;
-    font-weight:bold;
-    margin-top:15px;
-    display:inline-block;
-}
-
-/* Full-screen flower overlay (in between screens) */
-#flowerScreen{
-    position:fixed;
-    inset:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 0.8s ease;
-    z-index:9;
-}
-#flowerScreen.active{
-    opacity:1;
-    pointer-events:auto;
-}
-#flowerScreen iframe{
-    width:100%;
-    height:100%;
-    border:none;
-}
-</style>
-</head>
-
-<body>
-
-<!-- ASKING FOR VALENTINE SCREEN -->
-<h1>Will You Be My Valentine? 🥺🥺🥺</h1>
-
-<div class="buttons">
-    <button id="yesBtn">YES 💕</button>
-    <button id="noBtn">No 💔</button>
-</div>
-
-<!-- ANIMATED FLOWER IN-BETWEEN SCREEN -->
-<div id="flowerScreen">
-    <!-- Uses your existing animated-flower.html -->
-    <iframe src="animated-flower.html"></iframe>
-</div>
-
-<!-- MESSAGE / BOUQUET SCREEN (shown AFTER flower) -->
-<div id="bouquetScene">
-    <div class="bouquet">💐🌹💖</div>
-
-    <div style="font-size:1.6em; margin:20px;">
-        ARGHHHHHH I LOVE YOU SO MUCH BABYYYY 💖
-    </div>
-
-    <textarea id="loveInput" placeholder="Leave a sweet message... 💌"></textarea>
-    <br>
-    <button class="submit-btn" id="sendMessageBtn">Send 💖</button>
-    <div class="love-message" id="displayMessage"></div>
-
-    <!-- HYPERLINK TEXT ONLY -->
-    <a href="https://justinnavajaaa.github.io/formykaikaikaikaiii/" target="_blank">
-        formykaikaikaikaiii
-    </a>
-</div>
-
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-<script>
-emailjs.init("Jsq8y9n9irXxy36f-"); // PUBLIC KEY
-
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const bouquetScene = document.getElementById("bouquetScene");
-const sendMessageBtn = document.getElementById("sendMessageBtn");
-const loveInput = document.getElementById("loveInput");
-const displayMessage = document.getElementById("displayMessage");
-const flowerScreen = document.getElementById("flowerScreen");
-
-/* Move NO button */
-function moveNo(){
-    const container = document.querySelector(".buttons");
-    const maxX = container.clientWidth - noBtn.offsetWidth;
-    const maxY = container.clientHeight - noBtn.offsetHeight;
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top = Math.random() * maxY + "px";
-}
-
-/* show emoji and text */
-function showPop(){
-    const emoji = document.createElement("div");
-    emoji.classList.add("pop");
-    emoji.textContent = "😜";
-    emoji.style.left = (Math.random()*60 + 20) + "vw";
-    emoji.style.top = (Math.random()*60 + 20) + "vh";
-    document.body.appendChild(emoji);
-
-    const text = document.createElement("div");
-    text.classList.add("popText");
-    text.textContent = "ble ble ble 😜";
-    text.style.left = (Math.random()*60 + 20) + "vw";
-    text.style.top = (Math.random()*60 + 20) + "vh";
-    document.body.appendChild(text);
-
-    setTimeout(()=> emoji.remove(), 1200);
-    setTimeout(()=> text.remove(), 1200);
-}
-
-noBtn.addEventListener("mouseenter", function(){
-    moveNo();
-    showPop();
-});
-
-noBtn.addEventListener("touchstart", function(e){
-    e.preventDefault();
-    moveNo();
-    showPop();
-});
-
-moveNo();
-
-/* YES click:
-   1) Show animated flower for 15 seconds
-   2) Then show message / bouquet scene
-*/
-yesBtn.addEventListener("click", function(){
-    // hide first screen elements
-    document.querySelector(".buttons").style.display = "none";
-    document.querySelector("h1").style.display = "none";
-
-    // show animated flower overlay
-    flowerScreen.classList.add("active");
-
-    setTimeout(function(){
-        // hide flower, show message area
-        flowerScreen.classList.remove("active");
-        bouquetScene.classList.add("active");
-        loveInput.focus();
-    }, 15000); // 15 seconds
-});
-
-/* SEND MESSAGE */
-sendMessageBtn.addEventListener("click", function(){
-
-    const message = loveInput.value.trim();
-
-    if(!message){
-        displayMessage.textContent = "Please write something first 💌";
-        return;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine? 💖</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
-    displayMessage.textContent = "Sending... 💖";
+    body{
+      height:100vh;
+      overflow:hidden;
+      font-family:'Comic Sans MS', cursive;
+      background: url("baby.jpeg") no-repeat center center fixed;
+      background-size: cover;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      color:white;
+      position:relative;
+    }
 
-    emailjs.send("service_vi9ffxq", "template_xzyvp0c", {
-        message: message
-    })
-    .then(function(response){
-        displayMessage.textContent = "Message sent successfully 💕";
-        loveInput.value = "";
-    })
-    .catch(function(error){
-        displayMessage.textContent = "Failed to send 😢";
-        console.log(error);
+    /* Dark overlay */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:0;
+      pointer-events:none;
+    }
+
+    h1{
+      margin-top:70px;
+      font-size:3em;
+      text-align:center;
+      text-shadow:0 0 20px #fff, 0 0 40px #ff66b2;
+      z-index:1;
+    }
+
+    .buttons{
+      margin-top:80px;
+      position:relative;
+      width:400px;
+      height:250px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:1;
+    }
+
+    #yesBtn{
+      padding:40px 90px;
+      font-size:36px;
+      border:none;
+      border-radius:80px;
+      cursor:pointer;
+      background:linear-gradient(45deg,#ff4da6,#ff99cc);
+      color:white;
+      box-shadow:0 0 40px #ff66b2, 0 0 100px #ff99cc;
+      position:absolute;
+      left:50%;
+      top:45%;
+      transform:translate(-50%,-50%);
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #noBtn{
+      padding:10px 22px;
+      font-size:14px;
+      border:none;
+      border-radius:25px;
+      background:white;
+      color:#ff4da6;
+      position:absolute;
+      cursor:pointer;
+    }
+
+    /* Prompt text under buttons */
+    #promptText{
+      margin-top:20px;
+      font-size:1.2em;
+      text-shadow:0 0 10px #000;
+      z-index:1;
+      min-height:1.4em;
+    }
+
+    /* Floating emoji effect for NO */
+    .bleh-emoji{
+      position:fixed;
+      font-size:50px;
+      pointer-events:none;
+      transform:translate(-50%, -50%);
+      animation:blehMove 0.6s ease-out forwards;
+      z-index:5;
+    }
+
+    @keyframes blehMove{
+      0%{opacity:1; transform:translate(-50%,-50%) scale(1);}
+      100%{opacity:0; transform:translate(-50%,-120%) scale(1.4);}
+    }
+  </style>
+</head>
+<body>
+  <h1>Will You Be My Valentine? 💖</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">YES 💕</button>
+    <button id="noBtn">NO 💔</button>
+  </div>
+
+  <div id="promptText"></div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const promptText = document.getElementById("promptText");
+    const buttonsContainer = document.querySelector(".buttons");
+
+    // ---------- NO BUTTON LOGIC ----------
+    const noTexts = ["NO WAY!", "TOO SLOW!", "BLEH", "ONE MORE", "NYENYE"];
+    let noIndex = 0;
+
+    function moveNoButton(){
+      const maxX = buttonsContainer.clientWidth - noBtn.offsetWidth;
+      const maxY = buttonsContainer.clientHeight - noBtn.offsetHeight;
+
+      const randX = Math.random() * maxX;
+      const randY = Math.random() * maxY;
+
+      noBtn.style.left = randX + "px";
+      noBtn.style.top = randY + "px";
+    }
+
+    function showBlehEmoji(x, y){
+      const emoji = document.createElement("div");
+      emoji.className = "bleh-emoji";
+      emoji.textContent = "😝";
+      emoji.style.left = x + "px";
+      emoji.style.top = y + "px";
+      document.body.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 700);
+    }
+
+    function handleNoHover(e){
+      // Change button text
+      noBtn.textContent = noTexts[noIndex];
+      noIndex = (noIndex + 1) % noTexts.length;
+
+      // Move button
+      moveNoButton();
+
+      // Bleh emoji near cursor
+      const x = e.clientX || (window.innerWidth / 2);
+      const y = e.clientY || (window.innerHeight / 2);
+      showBlehEmoji(x, y);
+    }
+
+    noBtn.addEventListener("mouseenter", handleNoHover);
+    noBtn.addEventListener("touchstart", function(e){
+      e.preventDefault();
+      const touch = e.touches[0];
+      handleNoHover({ clientX: touch.clientX, clientY: touch.clientY });
     });
-});
-</script>
 
+    // Start NO at random place initially
+    window.addEventListener("load", moveNoButton);
+
+    // ---------- YES BUTTON LOGIC ----------
+    let yesClicks = 0;
+    const yesPrompts = [
+      "ARE YOU SURE?",
+      "LIKE SURE NA SURE?",
+      "ONE MORE TIME IF SURE",
+      "SURE NANA?",
+      "BANTAY?",
+      "LAST HEHE SURE NA SURE NA SURE?"
+    ];
+
+    yesBtn.addEventListener("click", () => {
+      yesClicks++;
+
+      // Slightly grow the YES button each time
+      const baseScale = 1;
+      const extraScale = 0.08 * yesClicks;
+      yesBtn.style.transform = `translate(-50%, -50%) scale(${baseScale + extraScale})`;
+      yesBtn.style.boxShadow = "0 0 55px #ff99cc";
+
+      if (yesClicks <= yesPrompts.length) {
+        // Show the corresponding prompt text
+        promptText.textContent = yesPrompts[yesClicks - 1];
+      }
+
+      if (yesClicks === yesPrompts.length) {
+        // After the 6th click, short delay then go to your main message page
+        setTimeout(() => {
+          // Redirect to your existing message/index page
+          window.location.href = "index.html";
+        }, 1200);
+      }
+    });
+  </script>
 </body>
 </html>
